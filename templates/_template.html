@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Record Audio</title>
+  <link rel="stylesheet" href="static/styles/temp.css">
+  <link rel="preload" href="{{ url_for('static', filename='images/Lyric Lens (Background Image).png') }}" as="image">
+</head>
+<body>
+    {% block body %}
+  
+    {% endblock %}
+    <script>
+        document.body.style.visibility = "hidden";
+        const bgImage = new Image();
+        bgImage.src = "{{ url_for('static', filename='images/Lyric Lens (Background Image).png') }}";
+        
+        bgImage.onload = function() {
+            document.body.style.visibility = "visible";
+        };
+    </script>
+</body>
+</html>

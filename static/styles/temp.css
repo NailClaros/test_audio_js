@@ -1,0 +1,13 @@
+body {
+    background-image: url('../images/Lyric\ Lens\ \(Background\ Image\).png');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    font-family: 'Albert Sans';
+    font-size: 22px;
+    color: yellow;
+}
