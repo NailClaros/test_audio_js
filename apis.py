@@ -3,6 +3,7 @@ import base64
 import json
 from bs4 import BeautifulSoup
 import os
+import time
 key = os.getenv('SHAZ_API_KEY')
 akey = os.getenv('alt_key')
 
@@ -14,6 +15,7 @@ def read_audio_file(file_path):
         return base64.b64encode(audio_file.read()).decode('utf-8')
         
 def run_apis_1(full_title):
+    st = time.time()
     print("ARIVING______________________________________________")
     genius_id = 0
     url = "https://shazam.p.rapidapi.com/songs/v2/detect"
@@ -74,7 +76,11 @@ def run_apis_1(full_title):
                     from trans import detect, translate
                     co, la = detect(ret_val[:130])
                     if co == "MUL":
+                        et = time.time()
+                        print(f"time = {et - st} seconds")
                         return 4, song_name, song_artist, la, ret_val, coverart
+                    et = time.time()
+                    print(f"time = {et - st} seconds")
                     return 3, song_name, song_artist, la, ret_val, coverart
             elif response.status_code == 200:
                 print('Error: cant find track___________________lyrics')

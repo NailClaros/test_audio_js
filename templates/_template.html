@@ -6,11 +6,15 @@
   <title>Record Audio</title>
   <link rel="stylesheet" href="static/styles/temp.css">
   <link rel="preload" href="{{ url_for('static', filename='images/Lyric Lens (Background Image).png') }}" as="image">
+  {% block styles %} 
+    
+  {% endblock %}
 </head>
 <body>
     {% block body %}
   
     {% endblock %}
+
     <script>
         document.body.style.visibility = "hidden";
         const bgImage = new Image();
