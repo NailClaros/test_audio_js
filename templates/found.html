@@ -3,11 +3,16 @@
 <body>
 
     <h1>Song Found --- <a href=""></a></h1>
+    {% if ca != "fail" %}
+        <img src="{{ ca }}" style="height: 80px; width: 80px;">
+    {% else %}
+        <img src="{{ url_for('static', filename='images/fail.jpg') }}" style="height: 80px; width: 80px;">
+    {% endif %}
     <p>Song Name: {{ name }}</p>
     <p>Artist: {{ art }}</p>
     <p>Language: {{ lang }}</p>
     <p>Lyrics: {{ lyric }}</p>
-    <img src="{{ ca }}" alt="Cover Art">
+    
 
 </body>
 

@@ -28,7 +28,7 @@ async function recordAudio() {
             const formData = new FormData();
             
             // Add the WAV blob to the form data
-            formData.append("audio", wavBlob, `recording.wav`);
+            formData.append('audio', wavBlob, `recording${currentRecord + 1}.wav`);
 
             // Send the WAV file to Flask server
             const response = await fetch("/upload-audio", {

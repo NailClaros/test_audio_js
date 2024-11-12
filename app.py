@@ -1,9 +1,16 @@
 from flask import Flask, jsonify, render_template, url_for, redirect, request, session
 import requests
 import os
-from apis import run_apis_1
+import glob
+from apis import run_apis
 app = Flask(__name__)
 db = []
+
+def clear_files():
+    files = glob.glob('audio_stream/clips/*')
+    for f in files:
+        os.remove(f)
+
 def db_check(code, val):
     if db.__contains__(val):
         x = db.pop(db.index(val))
@@ -15,13 +22,6 @@ def db_check(code, val):
 
 @app.route('/')
 def index():
-    # data = request.get_json()
-    # name = data.get('sn')
-    # art = data.get('sa')
-    # lang = data.get('la')
-    # lyric = data.get('ly')
-    # ca = data.get('ca')
-
     return render_template('index.html')
 
 @app.route('/found')
@@ -35,30 +35,40 @@ def found():
 
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
+    clear_files()
+
     if 'audio' not in request.files:
         return jsonify({"error": "No audio file uploaded"}), 400
-    
+    if 'audio' in request.files:
+        audio_file = request.files['audio']
+        print("Audio file details:")
+        print("Filename:", audio_file.filename)
+        print("Content type:", audio_file.content_type)
+        print("Size (bytes):", len(audio_file.read()))  # Read to get the file size in bytes
+        audio_file.seek(0) 
+
     audio_file = request.files['audio']
-    file_path = os.path.join('audio/', audio_file.filename)
-    code = 0
-    audio_file.save(file_path)
+
     try:
         
-        print(f"Audio file saved at {file_path}")  
         
-        code, song_name, song_artist, la, ret_val, coverart = run_apis_1('audio/recording.wav')
+        code, song_name, song_artist, la, ret_val, coverart = run_apis(audio_file)
+        clear_files()
         db_check(code, [song_name, song_artist, la, ret_val, coverart])
         if code != 0:
+            clear_files()
             print("Ending loop based on code from API response") 
-            return jsonify({"message": "Upload successful", 
-                            "endLoop": True, 
-                            "sn":f"{song_name}", 
-                            "sa":f"{song_artist}", 
-                            "la":f"{la}", 
-                            "ly":f"{ret_val}", 
-                            "ca":f"{coverart}"}), 200
+            return jsonify({'message': 'Upload successful', 
+                            'endLoop': True, 
+                            'sn':f'{song_name}', 
+                            'sa':f'{song_artist}', 
+                            'la':f"{la}", 
+                            'ly':f'{ret_val}', 
+                            'ca':f'{coverart}'}), 200
         else:
-            return jsonify({"message": "Upload successful"}), 200
+            clear_files()
+            return jsonify({'message': 'Upload successful', 'endLoop': False}), 200
     except Exception as e:
+        clear_files()
         print(f"Error saving or processing file: {e}")  
         return jsonify({"error": "Internal server error"}), 500
